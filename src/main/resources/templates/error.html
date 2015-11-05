@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <title>Error page</title>
+</head>
+<body>
+<h1 th:text="${errorCode}">500</h1>
+
+<p th:text="${errorMessage}">java.lang.NullPointerException</p>
+</body>
+</html>

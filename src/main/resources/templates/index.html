@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <title>Exam</title>
+</head>
+<body>
+<!-- Exam name -->
+<div><p th:text="${examName}">Welcome to exam!</p></div>
+<!-- Timer -->
+<input type="hidden" th:id="examTime" th:value="${examTime}"/>
+<div>Remaining time: <span id="tm"></span></div>
+<!-- Questions combo -->
+<div>
+    <label for="questions">Select Question</label>
+    <select id="questions" size="1"></select>
+</div>
+<!-- Question -->
+<div>
+    <h3><p id="question"></p></h3>
+</div>
+<!-- Answers -->
+<div id="answers"></div>
+<!-- Go to next question -->
+<div><p><input id="next" type="button" value="Apply and get next question"/></p></div>
+<!-- Submit results -->
+<form th:action="@{/save}" th:object="${results}" th:method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+    <input type="hidden" th:field="*{id}"/>
+    <input type="hidden" th:field="*{examId}"/>
+    <input type="hidden" id="useranswers" th:field="*{answers}"/>
+
+    <div><input id="done" type="submit" value="Submit and get results"/></div>
+</form>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script th:inline="javascript">
+    var userAnswers = {};
+    /*<![CDATA[*/
+    var questions = /*[[${questions}]]*/ [{'id': 1, 'multiAnswer': false, 'name': 'Question?'}];
+    /*]]>*/
+    $(document).ready(function () {
+        $("#next").click(nextHandler);
+        var q = $("#questions");
+        $.each(questions, function () {
+            q.append($("<option />").val(this.id).text(this.name));
+        });
+
+        comboHandler(); // on-start
+        q.change(comboHandler);
+
+        function comboHandler() {
+            var elm = $('#questions option:selected');
+            var i = elm.index();
+            $("#question").text(questions[i].name);
+            loadAnswers(questions[i].id, questions[i].multiAnswer);
+        }
+
+        function loadAnswers(id, isMulti) {
+            var url = location.protocol + '//' + location.host + '/answers/' + id;
+            var answers = $('#answers');
+            answers.empty();
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                type: 'GET',
+                success: function (data, status) {
+                    var elmType = isMulti ? "checkbox" : "radio";
+                    $.each(data, function (i, v) {
+                        var btn = $("<input />", {type: elmType, name: 'answer', value: v.id, id: v.id });
+                        if (userAnswers[v.id]) {
+                            btn.attr("checked", true);
+                        }
+                        var lab = $("<label />", {html: btn}).append(v.name);
+                        answers.append(btn, [lab, $("<br />")]);
+                    });
+                },
+                error: function () {
+                }
+            });
+        }
+
+        // handle answer button - store result and go to next question
+        function nextHandler() {
+            var answers = $('#answers').children('input');
+            $.each(answers, function (i, elm) {
+                userAnswers[elm.id] = elm.checked;
+            });
+            var elm = $('#questions option:selected');
+            var len = $('#questions').children('option').length;
+            var i = elm.index();
+            /*<![CDATA[*/
+            if (i == (len - 1)) {
+                $('#questions option:first-child').attr("selected", "selected");
+            } else {
+                $('#questions option:selected').next('option').attr('selected', 'selected');
+            }
+            $('#questions').change();
+            /*]]>*/
+        }
+
+        $("form").submit(function (event) {
+            var ua = [];
+            for (var k in userAnswers) {
+                if (userAnswers[k]) ua.push(k);
+            }
+            $("#useranswers").val(ua);
+        });
+
+        // Timer functions
+        var countDownTimer = parseInt($('#examTime').val());
+
+        function timerFunction() {
+            var m = ((countDownTimer / 60) >> 0);
+            var s = (countDownTimer % 60);
+            $('#tm').text(("00" + m).slice(-2) + ':' + ("00" + s).slice(-2));
+            if (countDownTimer == 0) {
+                $('#done').click();
+            }
+            countDownTimer -= 1;
+        }
+
+        setInterval(timerFunction, 1000);
+    });
+</script>
+</body>
+</html>

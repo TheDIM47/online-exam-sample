@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <title>Exam Results</title>
+</head>
+<body>
+<div><p th:text="${title}">Your Stat for exam!</p></div>
+<hr/>
+<!-- results -->
+<div>
+    <table>
+        <tr><td>Start:</td><td th:text="${start}"></td></tr>
+        <tr><td>Finish:</td><td th:text="${finish}"></td></tr>
+        <tr><td>Questions:</td><td th:text="${questionCount}"></td></tr>
+        <tr><td>Grade:</td><td th:text="${grade}"></td></tr>
+        <tr><td>Max Grade:</td><td th:text="${maxGrade}"></td></tr>
+    </table>
+</div>
+<form th:action="@{/logout}" th:method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input type="submit" value="Exit"/>
+</form>
+</body>
+</html>
