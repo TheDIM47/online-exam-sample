@@ -1,16 +1,3 @@
--- Users
--- INSERT INTO USERS (username, password) VALUES ('admin', 'admin');
--- INSERT INTO USERS (username, password) VALUES ('Ann', 'Boe');
--- INSERT INTO USERS (username, password) VALUES ('Bob', 'Joe');
--- INSERT INTO USERS (username, password) VALUES ('Jon', 'Doe');
--- INSERT INTO USERS (username, password) VALUES ('Rob', 'Zoe');
---
--- INSERT INTO AUTHORITIES (username, authority) VALUES ('admin', 'ADMIN');
--- INSERT INTO AUTHORITIES (username, authority) VALUES ('Ann', 'USER');
--- INSERT INTO AUTHORITIES (username, authority) VALUES ('Bob', 'USER');
--- INSERT INTO AUTHORITIES (username, authority) VALUES ('Jon', 'USER');
--- INSERT INTO AUTHORITIES (username, authority) VALUES ('Rob', 'USER');
-
 -- Exams
 INSERT INTO EXAM (name, description) VALUES ('Java Exam', 'Show your Java skills!');
 INSERT INTO EXAM (name, description) VALUES ('Scala Exam', 'Are you functional?');

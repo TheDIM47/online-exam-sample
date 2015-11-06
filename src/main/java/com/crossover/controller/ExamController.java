@@ -58,14 +58,6 @@ public class ExamController {
             model.addAttribute("examName", String.format("Welcome to \"%s\"!", exam.getName()));
             model.addAttribute("questions", Converters.questionsToDTO(questions));
 
-//            final long start;
-//            if (request.getSession().getAttribute("examStarted") == null) {
-//                start = protocol.getStart().getTime();
-//                request.getSession().setAttribute("examStarted", start);
-//            } else {
-//                start = (long) request.getSession().getAttribute("examStarted");
-//            }
-//            final int remaining = (int) ((examTimeMins * 60) - ((Calendar.getInstance().getTimeInMillis() - start) / 1000));
             request.getSession().setAttribute("examStarted", protocol.getStart().getTime());
             final int remaining = getRemainingTime(request);
             model.addAttribute("examTime", remaining);
@@ -78,12 +70,6 @@ public class ExamController {
 
     private int getRemainingTime(HttpServletRequest request) {
         final long start = (long) request.getSession().getAttribute("examStarted");
-//        if (request.getSession().getAttribute("examStarted") == null) {
-////            start = protocol.getStart().getTime();
-//            request.getSession().setAttribute("examStarted", start);
-//        } else {
-//            start = (long) request.getSession().getAttribute("examStarted");
-//        }
         final int remaining = (int) ((examTimeMins * 60) - ((Calendar.getInstance().getTimeInMillis() - start) / 1000));
         return remaining;
     }
@@ -155,7 +141,6 @@ public class ExamController {
     @ResponseBody
     public Integer timer(HttpServletRequest request) {
         return getRemainingTime(request);
-//        return Calendar.getInstance().getTimeInMillis();
     }
 
     private User getUser() {

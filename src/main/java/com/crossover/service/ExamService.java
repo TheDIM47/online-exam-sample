@@ -68,13 +68,11 @@ public class ExamService {
     public List<Question> getQuestionsForExam(int examId) {
         final List<Question> questions = questionRepo.findByExamId(examId);
         return questions;
-//        return questions.stream().map(a -> new ImmutablePair<>(a.getId(), a.getName())).collect(Collectors.toList());
     }
 
     public List<Answer> getAnswersForQuestion(int questionId) {
         final List<Answer> answers = answerRepo.findByQuestionId(questionId);
         return answers;
-//        return answers.stream().map(a -> new ImmutablePair<>(a.getId(), a.getName())).collect(Collectors.toList());
     }
 
     public Question getNextQuestion(Exam exam, Set<Integer> ids) {
@@ -125,52 +123,6 @@ public class ExamService {
         protocol.setCorrectAnswers(correctCount.size());
         protocol.setGrade(Math.round(grade));
     }
-
-
-    /**
-     * Process grade user answer on some question
-     *
-     * @param protocol user exam protocol
-     * @param answers set of answers for that question
-     * @param solutions user answers as array of answer IDs
-     * @return user exam protocol
-     */
-    /*
-    public static ExamProtocol grade(ExamProtocol protocol, List<Answer> answers, List<Integer> solutions) {
-        if (protocol == null || answers == null || solutions == null) {
-            throw new IllegalArgumentException("Invalid parameters on GRADE call");
-        }
-
-        final Set<Integer> correctAnswers = answers.stream()
-                .filter(Answer::isCorrect)
-                .map(AbstractPersistable::getId)
-                .collect(Collectors.toSet());
-
-        if (correctAnswers.size() == 0) {
-            throw new IllegalArgumentException("You must specify correct answers!");
-        }
-
-        final Set<Integer> userAnswers = solutions.stream()
-                .filter(a -> a > 0)
-                .collect(Collectors.toSet());
-
-        float step = (float) (MAX_GRADE / correctAnswers.size());
-        float grade = 0;
-
-        for (final Integer userAnswer : userAnswers) {
-            if (correctAnswers.contains(userAnswer)) {
-                grade += step;
-            }
-        }
-
-        protocol.setAnswered(1 + protocol.getAnswered());
-        if (Math.round(grade) == MAX_GRADE) {
-            protocol.setCorrectAnswers(1 + protocol.getCorrectAnswers());
-        }
-
-        return protocol;
-    }
-    */
 
     private static final Logger logger = LoggerFactory.getLogger(ExamService.class);
 
