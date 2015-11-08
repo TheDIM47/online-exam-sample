@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 
 @Repository
-@Transactional
 public interface ExamProtocolRepository extends JpaRepository<ExamProtocol, Integer> {}
